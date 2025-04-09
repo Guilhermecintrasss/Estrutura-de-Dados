@@ -73,6 +73,7 @@ int main(void)
   h.escreve();
 
   h = Heap(5, v); // construtor Heap(int n, int dados[]), seguido de atribuição (de cópia, não transferência (move))
+  //cria uma variavel temporaria que vai receber o valor dessa HEAP, e depois atribui a h, e a variavel temporaria some
   printf("h:\n");
   h.escreve();
 
@@ -152,7 +153,6 @@ Heap::Heap() {
 Heap::Heap(int n, int dados[]) :
   S(dados, dados + n) { //construtor que inicializa o vector S de dados até dados + n(ele passa o endereço de dados, e vai até dados+n, basicamente o vetor inteiro)
   //TODO: implementar (constroi_max_heap)
-
   for(int i = n/2 - 1; i >= 0 ; i--)
     desce(i);
 
@@ -165,7 +165,7 @@ void Heap::escreve_niveis() {
   int escritos = 0, fim_nivel = 1;
 
   for(auto const& elemento: S) {
-  // Equivalente a for (unsigned i = 0; i < S.size(); i++) { printf("%d ", S[i]);
+  // Equivalente a for (unsigned i = 0; i < S.size(); i++) { printf("%d ", S[i])};
     printf("%d ", elemento);
     if (++escritos == fim_nivel) {
       putchar('\n');
@@ -174,7 +174,8 @@ void Heap::escreve_niveis() {
     }
   }
   putchar('\n');
-}
+  }
+
 
 void Heap::escreve(const string& prefixo, int i) {
   if (i < (int) S.size()) {
