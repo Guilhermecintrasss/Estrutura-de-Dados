@@ -68,7 +68,7 @@ int main(void)
   h4.escreve();
   
   h = h2; // operador de atribuição, sem constructor ou constructor de cópia
-  h.insere(100);
+  h.insere(100);his->n = capacidade = n;
   printf("h2:\n");
   h2.escreve();
   printf("h:\n");
@@ -87,17 +87,37 @@ int main(void)
 }
 
 Heap::Heap() {
+  S(new int[TAMANHO_INICIAL]),
+  n(0),
+  capacidade(TAMANHO_INICIAL)
 }
 
-Heap::Heap(int n, int dados[]) :
-  S(dados, dados + n) { //construtor que inicializa o vector S de dados até dados + n(ele passa o endereço de dados, e vai até dados+n, basicamente o vetor inteiro)
-  //TODO: implementar (constroi_max_heap)
-  for(int i = n/2 - 1; i >= 0 ; i--)
+Heap::Heap(int n, int dados[]) 
+{ 
+  S = new int[n];
+  std::copy(dados,dados+n, S);
+  this->n = capacidade = n;
+
+  for (int i = n/2 - 1; i>=0; i--) //ignora as folhas
     desce(i);
 
 }
 
+Heap::Heap(const Heap& outro) :
+  Heap(outro.n,outro.S){ // Construtor de copia, copia uma heap em outra e passa o n , e o S
+  }
+
+Heap& Heap::operator=(const Heap& outro) {
+  n = capacidade = outro.n;
+  delete[] S;
+  S = new int[capacidade];
+  std::copy(outro.S, outro.S+n, S);
+  return *this;
+
+}
+
 Heap::~Heap() {
+  delete[] S;
 }
 
 void Heap::escreve_niveis() {
@@ -175,8 +195,16 @@ void Heap::sobe(int i) {
 }
 
 void Heap::insere(int p) {
-  S.push_back(p);
-  sobe(S.size()-1);
+ if (n == capacidade) {
+  capacidade *= 2;
+  int *novoS = new int[capacidade];
+  std::copy(S,S+n,novoS); //Um ponteiro pro começo que voce quer passar copiando, fim do ponteiro que voce quer passar copiando, e o ponteiro pro começo do vetor que 
+  // recebera a copia;
+ }
+ S[n++] = p;
+ sobe(n-1);
+ // esse insere basicamente cria uma copia do vetor com 2x o tamanho, e passa todos os dados para ele, quando o tamanho da Heap esta no maximo (o maximo da HEALP é
+ // a capacidade, enquanto o n é o tanto de elementos atualmente)
 }
 
 int Heap::consulta_maxima() {
